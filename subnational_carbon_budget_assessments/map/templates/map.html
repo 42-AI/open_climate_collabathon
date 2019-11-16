@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block head %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container text-center">
+    <nav class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">None</a>
+    </nav>
+
+
+    <div class="card" style="width: 100%;margin-top: 15px">
+
+      <div class="card-body">
+          <h5 class="card-title">{{map.1}}</h5>
+        {{map.0|safe}}
+      </div>
+    </div>
+    
+</div>
+{% endblock %}
