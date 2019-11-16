@@ -1,11 +1,10 @@
 from plotly.offline import plot
 import plotly.graph_objects as go
-
 import pandas as pd
 
 def get_data():
     df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2011_us_ag_exports.csv')
-    return df, "US -DEMO-"
+    return df, "US -DEMO-"  
 
 def draw_map():
     df, map_name = get_data()
@@ -15,8 +14,7 @@ def draw_map():
             locationmode = 'USA-states', # set of locations match entries in `locations`
             colorscale = 'Reds',
             colorbar_title = "Millions USD",
-    )
-
+    )    
     layout = go.Layout(
             autosize=True,
             geo = dict(

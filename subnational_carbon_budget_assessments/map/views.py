@@ -1,8 +1,9 @@
 from django.http import HttpResponse
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the map index.")
+    return HttpResponse("Hello world. You are at the map index.")
 
+### Plotly part ###
 from django.views.generic import TemplateView
 from . import draw_map
 
