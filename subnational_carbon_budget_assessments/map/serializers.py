@@ -1,14 +1,18 @@
 from rest_framework import serializers
-from .Map import Map
+from .models import Maps, States, Projections
 
-class MapSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(max_length=256)
+class MapsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Maps
+        fields = ("country",)
 
-    def create(self, validated_data):
-        return Map(id=None, **validated_data)
+class StatesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = States
+        fields = ("country", "state")
 
-    def update(self, instance, validated_data):
-        for field, value in validated_data.items():
-            setattr(instance, field, value)
-        return instance
+
+class ProjectionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Projections
+        fields = ("state", "data")

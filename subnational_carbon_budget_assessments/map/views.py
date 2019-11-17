@@ -3,23 +3,50 @@ from django.http import HttpResponse
 def index(request):
     return HttpResponse("Hello world. You are at the map index.")
 
-from rest_framework.response import Response
-from rest_framework import viewsets, status
 
-from . import serializers
-from .Map import Map
+from rest_framework import generics
+from .models import Maps, States, Projections
+from .serializers import MapsSerializer, StatesSerializer, ProjectionsSerializer
 
-maps = {
-    1: Map(id=1, name='US'),
-    2: Map(id=2, name='France'),
-    3: Map(id=3, name='Whatever'),
-}
 
-class MapViewSet(viewsets.ViewSet):
-    # Required for the Browsable API renderer to have a nice form.
-    serializer_class = serializers.MapSerializer
+class ListMapsView(generics.ListAPIView):
+    """
+    Provides a get method handler.
+    """
+    serializer_class = MapsSerializer
 
-    def list(self, request):
-        serializer = serializers.MapSerializer(
-            instance=maps.values(), many=True)
-        return Response(serializer.data)
+    queryset = Maps.objects.all()
+
+class ListStatesView(generics.ListAPIView):
+    """
+    Provides a get method handler.
+    """
+    serializer_class = MapsSerializer
+
+    def get_queryset(self):
+            """
+            Optionally restricts the returned states to a given country,
+            by filtering against a `country` query parameter in the URL.
+            """
+            queryset = States.objects.all()
+            country = self.request.query_params.get('country', None)
+            if country is not None:
+                queryset = queryset.filter(state__country=country)
+            return queryset
+
+class ListProjectionsView(generics.ListAPIView):
+    """
+    Provides a get method handler.
+    """
+    serializer_class = ProjectionsSerializer
+
+    def get_queryset(self):
+            """
+            Optionally restricts the returned projection to a given state,
+            by filtering against a `state` query parameter in the URL.
+            """
+            queryset = Projections.objects.all()
+            state = self.request.query_params.get('state', None)
+            if state is not None:
+                queryset = queryset.filter(projections__state=state)
+            return queryset
