@@ -5,11 +5,17 @@ from django.core.exceptions import ValidationError
 def populate_db(country, data):
     new_map, _ = Maps.objects.update_or_create(country=country)
     new_map.save()
+    data.drop(["Total"], inplace=True)
     for state in data.index.values:
         new_state, _ = States.objects.update_or_create(country=Maps.objects.get(country=country), state=state)
         new_state.save()
-        #new_proj, _ = Projections.objects.update_or_create(state=new_state, data=data.loc[state])
-        #new_proj.save()
+        new_serie, _ = Series.objects.update_or_create(state=new_state, serie="Population of %s" % state)
+        new_serie.save()
+        years = data.columns
+        for year, data_pt in enumerate(data.loc[state, :]):
+            new_point, _ = Points.objects.update_or_create(proj=new_serie, year=years[year], data=data_pt)
+            new_point.save()
+
 
 
 class DataFile(models.Model):
@@ -49,12 +55,23 @@ class States(models.Model):
     class Meta:
         ordering = ['country']
 
-class Projections(models.Model):
+class Series(models.Model):
     state = models.ForeignKey(States, on_delete=models.CASCADE)
-    data = models.CharField(max_length=255, null=False)
+    serie = models.CharField(max_length=255, null=False)
     
     def __str__(self):
-        return "%s" % (self.data)
+        return "%s" % (self.serie)
     
     class Meta:
         ordering = ['state']
+
+class Points(models.Model):
+    serie = models.ForeignKey(Series, on_delete=models.CASCADE)
+    year = models.IntegerField(null=False)
+    data = models.FloatField(null=True)
+    
+    def __str__(self):
+        return "%d: %s" % (self.year, self.data)
+    
+    class Meta:
+        ordering = ['serie', 'year']

@@ -39,7 +39,7 @@ def get_data(pledged_data="media/data/Data_Pledged_Warming_Map.xlsx", data_file=
     pledge_data = _load_pledge_data(pledged_data, country, scenario)
     pop_data = _load_population_data(data_file)
 
-    data = pd.DataFrame(index=pop_data.index, columns=range(1900,2041), dtype=float)
+    data = pd.DataFrame(index=pop_data.index, columns=range(1990,2041), dtype=float)
     data.loc[:,pop_data.columns] = pop_data
 
     data.interpolate(axis=1, inplace=True)

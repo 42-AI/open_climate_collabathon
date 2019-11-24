@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Maps, States, Projections
+from .models import Maps, States, Series, Points
 
 class MapsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,8 +11,12 @@ class StatesSerializer(serializers.ModelSerializer):
         model = States
         fields = ("country", "state")
 
-
-class ProjectionsSerializer(serializers.ModelSerializer):
+class SeriesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Projections
-        fields = ("state", "data")
+        model = Series
+        fields = ("state", "serie")
+
+class PointsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Points
+        fields = ("serie", "year", "data")
