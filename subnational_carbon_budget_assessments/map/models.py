@@ -1,23 +1,24 @@
 from django.db import models
+from .Data_preprocessing import get_data
 
 class DataFile(models.Model):
-    title = models.CharField(max_length=50, null=False)
+    country = models.CharField(max_length=3, null=False)
     file = models.FileField(upload_to="data/")
 
     def __str__(self):
-        return "%s" % (self.title)
+        return "%s" % (self.country)
     
     def save(self, *args, **kwargs):
         if not self.id:
             # TODO handle file and populate DB
-            print("uploaded ", self.title)
+            print(get_data(self.file, self.country, "1.5C").head)
         super(DataFile, self).save(*args, **kwargs)
     
     class Meta:
-        ordering = ['title']
+        ordering = ['country']
 
 class Maps(models.Model):
-    country = models.CharField(max_length=255, null=False)
+    country = models.CharField(max_length=3, null=False)
 
     def __str__(self):
         return "%s" % (self.country)
