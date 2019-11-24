@@ -1,12 +1,8 @@
 from django.db import models
 
-def handle_file(instance, filename):
-    # TODO handle file content
-    return "data/%s" % filename
-
 class DataFile(models.Model):
     title = models.CharField(max_length=50, null=False)
-    file = models.FileField(upload_to=handle_file)
+    file = models.FileField(upload_to="data/")
 
     def __str__(self):
         return "%s" % (self.title)

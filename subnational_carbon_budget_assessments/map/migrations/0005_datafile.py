@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=50)),
-                ('file', models.FileField(upload_to=map.models.handle_file)),
+                ('file', models.FileField(upload_to='data/')),
             ],
             options={
                 'ordering': ['title'],
