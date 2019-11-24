@@ -13,7 +13,7 @@ def populate_db(country, data):
         new_serie.save()
         years = data.columns
         for year, data_pt in enumerate(data.loc[state, :]):
-            new_point, _ = Points.objects.update_or_create(proj=new_serie, year=years[year], data=data_pt)
+            new_point, _ = Points.objects.update_or_create(serie=new_serie, year=years[year], data=data_pt)
             new_point.save()
 
 

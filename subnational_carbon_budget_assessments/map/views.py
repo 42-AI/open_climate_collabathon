@@ -1,25 +1,67 @@
-from django.http import HttpResponse, HttpResponseRedirect
+import json
+from django.core import serializers
+from django.views import View
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
+
+from .models import Maps, States, Series, Points
+
+from django.core.serializers.json import Serializer
+class JSONSerializer(Serializer):
+    def get_dump_object(self, obj):
+        self._current[obj._meta.pk.name] = obj._get_pk_val()
+        return self._current
 
 def index(request):
     return HttpResponse("Hello world. You are at the map index.")
 
+class MapsView(View):
+    maps_list_json = None
+    def get(self, request, *args, **kwargs):
+        if request.method == "GET":
+            maps_list = Maps.objects.all()
+            maps_list_json = JSONSerializer().serialize(maps_list)
+        return render(request, 'maps.html', {"maps_list": maps_list_json})
+
+class StatesView(View):
+    def get(self, request, *args, **kwargs):
+        states_list_json = None
+        if request.method == "GET":
+            country = kwargs["country"]
+            country_id = Maps.objects.get(country=country).id
+            states_list = States.objects.filter(country=country_id)
+            states_list_json = JSONSerializer().serialize(states_list, fields=["state"])
+        return render(request, 'states.html', {"states_list": states_list_json})
+
+class SeriesView(View):
+    def get(self, request, *args, **kwargs):
+        series_list_json = None
+        if request.method == "GET":
+            state = kwargs["state"]
+            state_id = States.objects.get(state=state).id
+            series_list = Series.objects.filter(state=state_id)
+            series_list_json = JSONSerializer().serialize(series_list, fields=["serie"])
+        return render(request, 'series.html', {"series_list": series_list_json})
+
+class PointsView(View):
+    def get(self, request, *args, **kwargs):
+        points_list_json = None
+        if request.method == "GET":
+            serie = kwargs["serie"]
+            serie_id = Series.objects.get(serie=serie).id
+            points_list = Points.objects.filter(serie=serie_id)
+            points_list_json = JSONSerializer().serialize(points_list, fields=["year", "data"])
+        return render(request, 'serie.html', {"points_list": points_list_json})
+
 ##### API #####
 from rest_framework import generics
-from .models import Maps, States, Series, Points
 from .serializers import MapsSerializer, StatesSerializer, SeriesSerializer, PointsSerializer
 
 class ListMapsView(generics.ListAPIView):
-    """
-    Provides a get method handler.
-    """
     queryset = Maps.objects.all()
     serializer_class = MapsSerializer
 
 class ListStatesView(generics.ListAPIView):
-    """
-    Provides a get method handler.
-    """
     serializer_class = StatesSerializer
     def get_queryset(self):
             """
@@ -34,9 +76,6 @@ class ListStatesView(generics.ListAPIView):
             return queryset
 
 class ListSeriesView(generics.ListAPIView):
-    """
-    Provides a get method handler.
-    """
     serializer_class = SeriesSerializer
     def get_queryset(self):
             """
@@ -51,9 +90,6 @@ class ListSeriesView(generics.ListAPIView):
             return queryset
 
 class ListPointsView(generics.ListAPIView):
-    """
-    Provides a get method handler.
-    """
     serializer_class = PointsSerializer
     def get_queryset(self):
             """
