@@ -1,8 +1,16 @@
 from django.db import models
 from .Data_preprocessing import get_data
+from django.core.exceptions import ValidationError
+
+def populate_db(country, data):
+    new_map, _ = Maps.objects.update_or_create(country=country)
+    new_map.save()
+    for state in data.index.values:
+        new_state, _ = States.objects.update_or_create(country=Maps.objects.get(country=country), state=state)
+        new_state.save()
 
 class DataFile(models.Model):
-    country = models.CharField(max_length=3, null=False)
+    country = models.CharField(max_length=3, null=False, unique=True)
     file = models.FileField(upload_to="data/")
 
     def __str__(self):
@@ -11,14 +19,16 @@ class DataFile(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             # TODO handle file and populate DB
-            print(get_data(self.file, self.country, "1.5C").head)
+            data = get_data(data_file=self.file, country=self.country, scenario="1.5C")
+            if len(data) > 0:
+                populate_db(self.country, data)
         super(DataFile, self).save(*args, **kwargs)
     
     class Meta:
         ordering = ['country']
 
 class Maps(models.Model):
-    country = models.CharField(max_length=3, null=False)
+    country = models.CharField(max_length=3, null=False, unique=True)
 
     def __str__(self):
         return "%s" % (self.country)

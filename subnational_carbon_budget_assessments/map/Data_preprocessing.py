@@ -34,9 +34,9 @@ The years represented are 1990-2040
 The scenario argument (string format) specifies for which scenario to output the state budgets: +-
 "1.5C" and "2.0C"
 '''
-def get_data(data_file, country, scenario):
+def get_data(pledged_data="media/data/Data_Pledged_Warming_Map.xlsx", data_file="", country="", scenario="1.5C"):
 
-    pledge_data = _load_pledge_data("media/data/Data_Pledged_Warming_Map.xlsx", country, scenario)
+    pledge_data = _load_pledge_data(pledged_data, country, scenario)
     pop_data = _load_population_data(data_file)
 
     data = pd.DataFrame(index=pop_data.index, columns=range(1900,2041), dtype=float)
@@ -47,5 +47,5 @@ def get_data(data_file, country, scenario):
     return data.multiply(pledge_data.reindex(data.columns), axis=1)
 
 if __name__ == "__main__":
-    data = get_data('data/Populations_USA.xlsx', "USA", "1.5C")
+    data = get_data(pledged_data="../media/data/Data_Pledged_Warming_Map.xlsx", data_file="../media/data/Populations_USA.xlsx", country="USA")
     print(data.head)
