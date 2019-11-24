@@ -19,5 +19,5 @@ python manage.py runserver IP
 ```
 
 ## usage
-To append data, connect to admin pannel and go to "MAP" section, click first item ("Data files") and add acountry TAG (3 letters) and a ".xlsx" file formated as demo file provided (USA).
+To append data, connect to admin pannel and go to "MAP" section, click first item ("Data files") and add a country TAG (3 letters) and a ".xlsx" file formated as demo file provided (data/Populations_USA.xlsx).
 Data will populate DB and become available automaticaly (edit and remove from admin pannel).
