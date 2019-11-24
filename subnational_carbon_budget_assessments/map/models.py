@@ -7,6 +7,12 @@ class DataFile(models.Model):
     def __str__(self):
         return "%s" % (self.title)
     
+    def save(self, *args, **kwargs):
+        if not self.id:
+            # TODO handle file and populate DB
+            print("uploaded ", self.title)
+        super(DataFile, self).save(*args, **kwargs)
+    
     class Meta:
         ordering = ['title']
 
