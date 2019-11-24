@@ -8,6 +8,9 @@ def populate_db(country, data):
     for state in data.index.values:
         new_state, _ = States.objects.update_or_create(country=Maps.objects.get(country=country), state=state)
         new_state.save()
+        #new_proj, _ = Projections.objects.update_or_create(state=new_state, data=data.loc[state])
+        #new_proj.save()
+
 
 class DataFile(models.Model):
     country = models.CharField(max_length=3, null=False, unique=True)
