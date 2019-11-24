@@ -1,13 +1,13 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
 
 def index(request):
     return HttpResponse("Hello world. You are at the map index.")
 
-
+##### API #####
 from rest_framework import generics
 from .models import Maps, States, Projections
 from .serializers import MapsSerializer, StatesSerializer, ProjectionsSerializer
-
 
 class ListMapsView(generics.ListAPIView):
     """
