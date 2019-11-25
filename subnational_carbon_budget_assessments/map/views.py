@@ -2,7 +2,7 @@ import json
 from django.core import serializers
 from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from .models import Maps, States, Series, Points
 
@@ -28,7 +28,7 @@ class StatesView(View):
         states_list_json = None
         if request.method == "GET":
             country = kwargs["country"]
-            country_id = Maps.objects.get(country=country).id
+            country_id = get_object_or_404(Maps, country=country).id
             states_list = States.objects.filter(country=country_id)
             states_list_json = JSONSerializer().serialize(states_list, fields=["state"])
         return render(request, 'states.html', {"states_list": states_list_json})
@@ -38,7 +38,7 @@ class SeriesView(View):
         series_list_json = None
         if request.method == "GET":
             state = kwargs["state"]
-            state_id = States.objects.get(state=state).id
+            state_id = get_object_or_404(States, state=state).id
             series_list = Series.objects.filter(state=state_id)
             series_list_json = JSONSerializer().serialize(series_list, fields=["serie"])
         return render(request, 'series.html', {"series_list": series_list_json})
@@ -48,7 +48,7 @@ class PointsView(View):
         points_list_json = None
         if request.method == "GET":
             serie = kwargs["serie"]
-            serie_id = Series.objects.get(serie=serie).id
+            serie_id = get_object_or_404(Series, serie=serie).id
             points_list = Points.objects.filter(serie=serie_id)
             points_list_json = JSONSerializer().serialize(points_list, fields=["year", "data"])
         return render(request, 'serie.html', {"points_list": points_list_json})
@@ -71,7 +71,7 @@ class ListStatesView(generics.ListAPIView):
             queryset = States.objects.all()
             country = self.kwargs['country']
             if country is not None:
-                country_id = Maps.objects.get(country=country).id
+                country_id = get_object_or_404(Maps, country=country).id
                 queryset = queryset.filter(country=country_id)
             return queryset
 
@@ -85,7 +85,7 @@ class ListSeriesView(generics.ListAPIView):
             queryset = Series.objects.all()
             state = self.kwargs['state']
             if state is not None:
-                state_id = States.objects.get(state=state).id
+                state_id = get_object_or_404(States, state=state).id
                 queryset = queryset.filter(state=state_id)
             return queryset
 
@@ -99,6 +99,6 @@ class ListPointsView(generics.ListAPIView):
             queryset = Points.objects.all()
             serie = self.kwargs['serie']
             if serie is not None:
-                serie_id = Series.objects.get(serie=serie).id
+                serie_id = get_object_or_404(Series, serie=serie).id
                 queryset = queryset.filter(serie=serie_id)
             return queryset
