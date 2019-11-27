@@ -16,8 +16,6 @@ def populate_db(country, data):
             new_point, _ = Points.objects.update_or_create(serie=new_serie, year=years[year], data=data_pt)
             new_point.save()
 
-
-
 class DataFile(models.Model):
     country = models.CharField(max_length=3, null=False, unique=True)
     file = models.FileField(upload_to="data/")
