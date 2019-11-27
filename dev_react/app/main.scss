@@ -1,0 +1,31 @@
+$red: #B71C1C;
+$green: #4CAF50;
+$outline-blue: #08c;
+
+$borderStyle: 1px solid #ddd;
+
+@import 'styles/select_box';
+
+body {
+  margin-top: 70px;
+}
+
+.navbar {
+  border-radius: 0;
+  height: 60px;
+  background: rgba(239, 239, 255, 0.9);
+  padding: 0 30px;
+}
+
+.navbar-header {
+  display: inline-block;
+}
+
+.datamap-outer-conainer {
+  padding: 0;
+
+  #datamap-container {
+    position: relative;
+    margin: 0 auto;
+  }
+}
