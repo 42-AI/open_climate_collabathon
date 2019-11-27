@@ -2,3 +2,4 @@ django
 pandas
 djangorestframework
 markdown
+xlrd

@@ -1,4 +1,5 @@
 import json
+from datetime import date
 from django.core import serializers
 from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -23,6 +24,18 @@ class MapsView(View):
             maps_list_json = JSONSerializer().serialize(maps_list)
         return render(request, 'maps.html', {"maps_list": maps_list_json})
 
+def current_val(states_list_json):
+    # loads json str
+    states_dict = json.loads(states_list_json)
+    for i, _ in enumerate(states_dict):
+        serie = "Population of " + states_dict[i]["state"] # TODO edit metric
+        serie_id = get_object_or_404(Series, serie=serie).id
+        point = Points.objects.filter(serie=serie_id, year=date.today().year)
+        point_val = JSONSerializer().serialize(point, fields=["data"])
+        point_val = json.loads(point_val)
+        states_dict[i]["value"] = point_val[0]["data"]
+    return json.dumps(states_dict)
+
 class StatesView(View):
     def get(self, request, *args, **kwargs):
         states_list_json = None
@@ -30,7 +43,11 @@ class StatesView(View):
             country = kwargs["country"]
             country_id = get_object_or_404(Maps, country=country).id
             states_list = States.objects.filter(country=country_id)
-            states_list_json = JSONSerializer().serialize(states_list, fields=["state"])
+            
+            states_list_json = JSONSerializer().serialize(states_list)
+            
+            states_list_json = current_val(states_list_json)
+
         return render(request, 'states.html', {"states_list": states_list_json})
 
 class SeriesView(View):

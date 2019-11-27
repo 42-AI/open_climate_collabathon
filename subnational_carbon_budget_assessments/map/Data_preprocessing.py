@@ -1,5 +1,4 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 
 
 def _load_pledge_data(data_file, country, scenario):
