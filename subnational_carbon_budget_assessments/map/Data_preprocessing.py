@@ -23,7 +23,7 @@ def _load_population_data(data_file):
     pop = pd.read_excel(data_file, header=0, index_col=0)
     pop_states = pop.loc[:, pop.columns[1:]]
     pop_prop = pop_states / pop.loc['Total']
-    return pop_prop
+    return pop_prop * 1000
 
 
 '''

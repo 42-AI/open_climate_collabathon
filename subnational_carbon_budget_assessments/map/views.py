@@ -43,7 +43,6 @@ class StatesView(View):
             states_list = States.objects.filter(country=country_id)
             states_list_json = JSONSerializer().serialize(states_list)
             states_list_json = json.loads(states_list_json)
-            print(states_list_json)
             states_list_json = current_year(states_list_json)
         return render(request, 'states.html', {"states_list": states_list_json})
 
