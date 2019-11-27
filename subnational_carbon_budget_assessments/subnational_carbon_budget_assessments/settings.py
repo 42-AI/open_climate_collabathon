@@ -27,7 +27,7 @@ SECRET_KEY = 'y#*gf2k#pcx!w5jj+!ftp$=0$*qc-h*-@x_$2o&vj40=$^yxms'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
