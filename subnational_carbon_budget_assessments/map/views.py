@@ -26,13 +26,13 @@ class MapsView(View):
 
 def current_year(states_dict):
     for i, _ in enumerate(states_dict):
-        serie = "Population of " + states_dict[i]["state"] # TODO edit metric
+        serie = "Population of " + states_dict[i]["regionName"] # TODO edit metric
         serie_id = get_object_or_404(Series, serie=serie).id
         point = Points.objects.filter(serie=serie_id, year=date.today().year)
         point_val = JSONSerializer().serialize(point, fields=["data"])
         point_val = json.loads(point_val)
         states_dict[i]["value"] = point_val[0]["data"]
-    return {"data":json.dumps(states_dict)}
+    return states_dict
 
 class StatesView(View):
     def get(self, request, *args, **kwargs):
@@ -51,9 +51,9 @@ class SeriesView(View):
     def get(self, request, *args, **kwargs):
         series_list_json = None
         if request.method == "GET":
-            state = kwargs["state"]
-            state_id = get_object_or_404(States, state=state).id
-            series_list = Series.objects.filter(state=state_id)
+            state = kwargs["regionName"]
+            state_id = get_object_or_404(States, regionName=state).id
+            series_list = Series.objects.filter(regionName=state_id)
             series_list_json = JSONSerializer().serialize(series_list, fields=["serie"])
         return render(request, 'series.html', {"series_list": series_list_json})
 
@@ -99,22 +99,22 @@ class ListSeriesView(generics.ListAPIView):
     serializer_class = SeriesSerializer
     def get_queryset(self):
         """
-        Optionally restricts the returned serie to a given state,
-        by filtering against a `state` query parameter in the URL.
+        Optionally restricts the returned serie to a given regionName,
+        by filtering against a `regionName` query parameter in the URL.
         """
         queryset = Series.objects.all()
-        state = self.kwargs['state']
-        if state is not None:
-            state_id = get_object_or_404(States, state=state).id
-            queryset = queryset.filter(state=state_id)
+        regionName = self.kwargs['regionName']
+        if regionName is not None:
+            state_id = get_object_or_404(States, regionName=regionName).id
+            queryset = queryset.filter(regionName=state_id)
         return queryset
 
 class ListPointsView(generics.ListAPIView):
     serializer_class = PointsSerializer
     def get_queryset(self):
         """
-        Optionally restricts the returned serie to a given state,
-        by filtering against a `state` query parameter in the URL.
+        Optionally restricts the returned points to a given serie,
+        by filtering against a `serie` query parameter in the URL.
         """
         queryset = Points.objects.all()
         serie = self.kwargs['serie']

@@ -6,13 +6,13 @@ def populate_db(country, data):
     new_map, _ = Maps.objects.update_or_create(country=country)
     new_map.save()
     data.drop(["Total"], inplace=True)
-    for state in data.index.values:
-        new_state, _ = States.objects.update_or_create(country=Maps.objects.get(country=country), state=state)
-        new_state.save()
-        new_serie, _ = Series.objects.update_or_create(state=new_state, serie="Population of %s" % state)
+    for regionName in data.index.values:
+        new_regionName, _ = States.objects.update_or_create(country=Maps.objects.get(country=country), regionName=regionName)
+        new_regionName.save()
+        new_serie, _ = Series.objects.update_or_create(regionName=new_regionName, serie="Population of %s" % regionName)
         new_serie.save()
         years = data.columns
-        for year, data_pt in enumerate(data.loc[state, :]):
+        for year, data_pt in enumerate(data.loc[regionName, :]):
             new_point, _ = Points.objects.update_or_create(serie=new_serie, year=years[year], data=data_pt)
             new_point.save()
 
@@ -47,23 +47,23 @@ class Maps(models.Model):
 
 class States(models.Model):
     country = models.ForeignKey(Maps, on_delete=models.CASCADE)
-    state = models.CharField(max_length=255, null=False)
+    regionName = models.CharField(max_length=255, null=False)
 
     def __str__(self):
-        return "%s" % (self.state)
+        return "%s" % (self.regionName)
 
     class Meta:
         ordering = ['country']
 
 class Series(models.Model):
-    state = models.ForeignKey(States, on_delete=models.CASCADE)
+    regionName = models.ForeignKey(States, on_delete=models.CASCADE)
     serie = models.CharField(max_length=255, null=False)
     
     def __str__(self):
         return "%s" % (self.serie)
     
     class Meta:
-        ordering = ['state']
+        ordering = ['regionName']
 
 class Points(models.Model):
     serie = models.ForeignKey(Series, on_delete=models.CASCADE)

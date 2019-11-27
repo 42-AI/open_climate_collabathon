@@ -9,12 +9,12 @@ class MapsSerializer(serializers.ModelSerializer):
 class StatesSerializer(serializers.ModelSerializer):
     class Meta:
         model = States
-        fields = ("country", "state")
+        fields = ("country", "regionName")
 
 class SeriesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Series
-        fields = ("state", "serie")
+        fields = ("regionName", "serie")
 
 class PointsSerializer(serializers.ModelSerializer):
     class Meta:
