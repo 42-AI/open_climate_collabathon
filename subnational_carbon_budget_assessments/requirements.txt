@@ -1,6 +1,0 @@
-django
-pandas
-djangorestframework
-django-cors-headers
-markdown
-xlrd
