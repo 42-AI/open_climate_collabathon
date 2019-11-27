@@ -6,14 +6,25 @@ import Navbar from '../components/Navbar';
 
 class App extends React.Component {
   constructor(props){
-    super(props);
+	super(props);
+	this.state = {
+		map_data:[]
+	};
   }
+  componentDidMount() {
+		console.log("Fetching map data from API");
+		const api = 'https://my-json-server.typicode.com/ArthurLan/fake_api/us_data';
+		fetch(api)
+		.then(response => response.json())
+		.then(response => this.setState({ map_data:response.data }))
+	}
   render() {
     return (
       <div>
         <Navbar />
         <div className="datamap-outer-conainer">
-          <DataMap regionData={this.props.regionData} />
+          {/* <DataMap regionData={this.props.regionData} /> */}
+          <DataMap regionData={this.state.map_data} />
         </div>
       </div>
     );

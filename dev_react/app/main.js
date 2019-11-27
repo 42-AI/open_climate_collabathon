@@ -7,19 +7,6 @@ import rootReducer from './reducers'
 import App from './containers/App';
 import statesData from './data/states-data';
 
-fetch('https://my-json-server.typicode.com/ArthurLan/fake_api/us_data')
-.then(resp => {
-	console.log("hello !")
-	resp.json()
-	.then(hello => {
-		console.log(`Here are data : ${JSON.stringify(hello)}`)
-	})
-})
-.catch(error => {
-		  console.log(`${error} - Couldn't fetch data`)
- 	// }
-});
-
 const initialState = {
 	regionData: statesData,
 	emptyRegions: [],
