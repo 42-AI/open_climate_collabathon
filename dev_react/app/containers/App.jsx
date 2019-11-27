@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import DataMap from '../components/DataMap';
 import Navbar from '../components/Navbar';
+import statesData from '../data/states-data.js'
 
 class App extends React.Component {
   constructor(props){
@@ -13,17 +14,28 @@ class App extends React.Component {
   }
   componentDidMount() {
 		console.log("Fetching map data from API");
-		const api = 'https://my-json-server.typicode.com/ArthurLan/fake_api/us_data';
+		const api = 'http://127.0.0.1:8000/api/maps/USA?format=json';
 		fetch(api)
-		.then(response => response.json())
-		.then(response => this.setState({ map_data:response.data }))
+		.then(response => 
+			response.json()
+		)
+		.then(response => {
+			response.forEach(element => {
+				statesData.forEach(region => {
+					if (region.regionName == element.regionName) {
+						element.code = region.code
+					}
+				});
+			});
+			console.log(response)
+			this.setState({ map_data:response})
+		})
 	}
   render() {
     return (
       <div>
         <Navbar />
         <div className="datamap-outer-conainer">
-          {/* <DataMap regionData={this.props.regionData} /> */}
           <DataMap regionData={this.state.map_data} />
         </div>
       </div>
