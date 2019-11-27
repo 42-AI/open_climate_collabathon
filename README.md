@@ -8,6 +8,7 @@ This structure with APIs from the backend is also in the spirit of the Collabath
 <img align="center" src="src_readme/video_example.gif" width ="100%" />
 
 ## Backend Installation
+Go to /dev_django
 
 ### install:
 ```
@@ -20,7 +21,8 @@ python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 ```
-and go to 127.0.0.1:8000 to test it localy
+and go to `127.0.0.1:8000` in your browser to test it localy
+
 
 To use another IP address and serve on your network, simply add it to ALLOWED_HOSTS in settings.py and run with: 
 ```
@@ -34,11 +36,19 @@ Data will populate DB and become available automaticaly (edit and remove from ad
 
 
 ## Frontend Installation
+Go to /dev_react
 
-* run `npm install` from main repo directory
-* start webpack development server with `npm start`
-* go to `localhost:8080` in your browser
+### install:
+```
+npm install
+```
 
+### run locally:
+```
+npm start
+```
+and go to `127.0.0.1:8080` in your browser to test it localy
+
+### edit API fetching
 Frontend is fetching map's data from 'http://127.0.0.1:8000/api/maps/USA?format=json'
-
 You can edit this parameter in app/containers/App.jsx on line 17.
